@@ -16,6 +16,10 @@ The `Harbor\DataContainer\DataContainer` class simply `use`s the Trait and imple
 composer require "harbor/data-container:1.0.*"
 ```
 
+## Requirements
+
+PHP 5.4+
+
 ## Usage
 
 ### As Trait
