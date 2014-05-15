@@ -17,7 +17,8 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Harbor\\DataContainer\\": "src/"
+            "Harbor\\DataContainer\\": "src/",
+            "Harbor\\DataContainer\\Tests\\": "tests/"
         }
     }
 }
