@@ -13,7 +13,7 @@ The `Harbor\DataContainer\DataContainer` class simply `use`s the Trait and imple
 ## Installation
 
 ```
-composer require "harbor/data-container:1.0.*"
+composer require "harbor/data-container:1.1.*"
 ```
 
 ## Requirements
