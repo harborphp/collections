@@ -4,6 +4,7 @@ namespace Harbor\DataContainer;
 
 use ArrayIterator;
 use DomainException;
+use InvalidArgumentException;
 
 /**
  * Trait DataContainerTrait
@@ -105,6 +106,27 @@ trait DataContainerTrait
     public function remove($key)
     {
         unset($this->data[$key]);
+    }
+
+    /**
+     * Merges an array, or any object that implements a toArray method,
+     * into the current data set. The data being merged in wins on conflicts.
+     * @param  mixed $data
+     * @return $this
+     */
+    public function merge($data)
+    {
+        if (is_object($data) && method_exists($data, 'toArray')) {
+            $data = $data->toArray();
+        }
+
+        if (! is_array($data)) {
+            throw new InvalidArgumentException('Cannot merge a value that is not an Array or an object implementing a toArray method.');
+        }
+
+        $this->data = $data + $this->data;
+
+        return $this;
     }
 
     /**

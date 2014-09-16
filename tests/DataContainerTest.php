@@ -4,6 +4,16 @@ namespace Harbor\DataContainer\Tests;
 
 use Harbor\DataContainer\DataContainer;
 
+class DummyObject
+{
+    public function toArray()
+    {
+        return [
+            'foo' => 'overwrite'
+        ];
+    }
+}
+
 class DataContainerTest extends \PHPUnit_Framework_TestCase
 {
     protected function getPreLoadedContainer()
@@ -68,6 +78,48 @@ class DataContainerTest extends \PHPUnit_Framework_TestCase
 
         $container->remove('foo');
         $this->assertAttributeEquals(['baz' => 'foo'], 'data', $container);
+    }
+
+    public function testMergeWithArray()
+    {
+        $container = $this->getPreLoadedContainer();
+
+        $container->merge([
+            'foo' => 'overwrite',
+            'new' => 'value'
+        ]);
+
+        $expected = [
+            'foo' => 'overwrite',
+            'baz' => 'foo',
+            'new' => 'value',
+        ];
+
+        $this->assertAttributeEquals($expected, 'data', $container);
+    }
+
+    public function testMergeWithObjectWithToArray()
+    {
+        $container = $this->getPreLoadedContainer();
+
+        $container->merge(new DummyObject);
+
+        $expected = [
+            'foo' => 'overwrite',
+            'baz' => 'foo',
+        ];
+
+        $this->assertAttributeEquals($expected, 'data', $container);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testMergeWithInvalidValue()
+    {
+        $container = $this->getPreLoadedContainer();
+
+        $container->merge(new \StdClass);
     }
 
     public function testToArray()
