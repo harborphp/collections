@@ -78,6 +78,44 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('i_am_default', $collection->get('yummy', 'i_am_default'));
     }
 
+    public function testPush()
+    {
+        $items = ['foo'];
+
+        $collection = new Collection($items);
+        $collection->push('bar');
+
+        $this->assertAttributeEquals(['foo', 'bar'], 'items', $collection);
+    }
+
+    public function testPop()
+    {
+        $items = ['foo', 'bar'];
+
+        $collection = new Collection($items);
+
+        $this->assertEquals('bar', $collection->pop());
+    }
+
+    public function testUnshift()
+    {
+        $items = ['foo'];
+
+        $collection = new Collection($items);
+        $collection->unshift('bar');
+
+        $this->assertAttributeEquals(['bar', 'foo'], 'items', $collection);
+    }
+
+    public function testShift()
+    {
+        $items = ['foo', 'bar'];
+
+        $collection = new Collection($items);
+
+        $this->assertEquals('foo', $collection->shift());
+    }
+
     public function testRemove()
     {
         $collection = $this->getPreLoadedContainer();

@@ -59,6 +59,48 @@ trait CollectionTrait
     }
 
     /**
+     * Push a new value onto the end of the collection.
+     * @param $value
+     * @return $this
+     */
+    public function push($value)
+    {
+        array_push($this->items, $value);
+
+        return $this;
+    }
+
+    /**
+     * Pop a value off the end of collection.
+     * @return mixed
+     */
+    public function pop()
+    {
+        return array_pop($this->items);
+    }
+
+    /**
+     * Prepend a value to the beginning of the collection.
+     * @param $value
+     * @return $this
+     */
+    public function unshift($value)
+    {
+        array_unshift($this->items, $value);
+
+        return $this;
+    }
+
+    /**
+     * Shift a value off the beginning of the collection.
+     * @return mixed
+     */
+    public function shift()
+    {
+        return array_shift($this->items);
+    }
+
+    /**
      * Returns the items as an array.
      * @return array
      */

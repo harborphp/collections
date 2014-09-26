@@ -33,6 +33,32 @@ interface CollectionInterface
     public function set($key, $value = null);
 
     /**
+     * Push a new value onto the end of the collection.
+     * @param $value
+     * @return $this
+     */
+    public function push($value);
+
+    /**
+     * Pop a value off the end of collection.
+     * @return mixed
+     */
+    public function pop();
+
+    /**
+     * Prepend a value to the beginning of the collection.
+     * @param $value
+     * @return mixed
+     */
+    public function unshift($value);
+
+    /**
+     * Shift a value off the beginning of the collection.
+     * @return mixed
+     */
+    public function shift();
+
+    /**
      * Returns the data as an array.
      * @return array
      */
