@@ -89,6 +89,12 @@ interface CollectionInterface
     public function merge($data);
 
     /**
+     * Returns if the collection is empty or not.
+     * @return bool
+     */
+    public function isEmpty();
+
+    /**
      * Implements the JsonSerializable interface so it can be used with
      * json_encode().
      * @return string

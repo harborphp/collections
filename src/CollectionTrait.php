@@ -190,6 +190,15 @@ trait CollectionTrait
     }
 
     /**
+     * Returns if the collection is empty or not.
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return count($this->items) === 0;
+    }
+
+    /**
      * Implements the JsonSerializable interface so it can be used with
      * json_encode().
      * @return string
