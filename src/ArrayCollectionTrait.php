@@ -1,16 +1,16 @@
 <?php
 
-namespace Harbor\DataContainer;
+namespace Harbor\Collections;
 
 use ArrayIterator;
 use DomainException;
 use InvalidArgumentException;
 
 /**
- * Trait DataContainerTrait
- *  implements ArrayAccess, Countable, IteratorAggregate
+ * Trait ArrayCollectionTrait
+ *  implements Collection, ArrayAccess, Countable, IteratorAggregate, JsonSerializable
  */
-trait DataContainerTrait
+trait ArrayCollectionTrait
 {
     /**
      * @var array
@@ -76,7 +76,7 @@ trait DataContainerTrait
      */
     public function toJson($options = 0, $depth = 512)
     {
-        $encodedData = json_encode($this->data, $options, $depth);
+        $encodedData = json_encode($this->toArray(), $options, $depth);
 
         // @codeCoverageIgnoreStart
         switch (json_last_error()) {
@@ -127,6 +127,16 @@ trait DataContainerTrait
         $this->data = $data + $this->data;
 
         return $this;
+    }
+
+    /**
+     * Implements the JsonSerializable interface so it can be used with
+     * json_encode().
+     * @return string
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 
     /**

@@ -1,6 +1,6 @@
 {
-    "name": "harbor/data-container",
-    "description": "A Data Container Class and Trait",
+    "name": "harbor/collections",
+    "description": "Generic Collection Classes",
     "require-dev": {
         "phpunit/phpunit": "4.1.*"
     },
@@ -17,8 +17,8 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Harbor\\DataContainer\\": "src/",
-            "Harbor\\DataContainer\\Tests\\": "tests/"
+            "Harbor\\Collections\\": "src/",
+            "Harbor\\Collections\\Tests\\": "tests/"
         }
     }
 }
