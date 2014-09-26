@@ -1,19 +1,21 @@
-# Data Container
+# Collections
 
-A simple Data Container class and Trait.
+A Generic Collections implementation.
 
 The Trait implements all of the methods for the following interfaces:
 
-*  ArrayAccess
+* Harbor\Collections\CollectionInterface
+* ArrayAccess
 * Countable
 * IteratorAggregate
+* JsonSerializable
 
-The `Harbor\DataContainer\DataContainer` class simply `use`s the Trait and implements those interfaces.
+The `Harbor\Collections\Collection` class simply `use`s the Trait and implements those interfaces, plus adds a constructor.
 
 ## Installation
 
 ```
-composer require "harbor/data-container:1.1.*"
+composer require "harbor/collections:2.0.*"
 ```
 
 ## Requirements
@@ -27,9 +29,9 @@ PHP 5.4+
 ``` php
 <?php
 
-class Foo
+class Foo implements CollectionInterface, ArrayAccess, Countable, IteratorAggregate, JsonSerializable
 {
-    use Harbor\DataContainer\DataContainerTrait;
+    use Harbor\Collections\CollectionTrait;
 }
 
 // Use it
@@ -42,18 +44,18 @@ $foo->bar = 'bar';
 ``` php
 <?php
 
-use Harbor\DataContainer\DataContainer;
+use Harbor\Collections\CollectionInterface;
 
 class Foo
 {
     protected $data;
 
-    public function __construct(DataContainer $data)
+    public function __construct(CollectionInterface $data)
     {
         $this->data = $data;
     }
 }
 
 // Use it
-$foo = new Foo(new DataContainer());
+$foo = new Foo(new Collection());
 ```

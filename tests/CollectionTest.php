@@ -14,7 +14,7 @@ class DummyObject
     }
 }
 
-class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends \PHPUnit_Framework_TestCase
 {
     protected function getPreLoadedContainer()
     {
