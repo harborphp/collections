@@ -8,14 +8,14 @@ use InvalidArgumentException;
 
 /**
  * Trait ArrayCollectionTrait
- *  implements Collection, ArrayAccess, Countable, IteratorAggregate, JsonSerializable
+ *  implements CollectionInterface, ArrayAccess, Countable, IteratorAggregate, JsonSerializable
  */
-trait ArrayCollectionTrait
+trait CollectionTrait
 {
     /**
      * @var array
      */
-    protected $data = [];
+    protected $items = [];
 
     /**
      * Checks if the container has the given key.
@@ -24,7 +24,7 @@ trait ArrayCollectionTrait
      */
     public function has($key)
     {
-        return array_key_exists($key, $this->data);
+        return array_key_exists($key, $this->items);
     }
 
     /**
@@ -36,7 +36,7 @@ trait ArrayCollectionTrait
      */
     public function get($key, $default = null)
     {
-        return $this->has($key) ? $this->data[$key] : $default;
+        return $this->has($key) ? $this->items[$key] : $default;
     }
 
     /**
@@ -52,19 +52,37 @@ trait ArrayCollectionTrait
                 $this->set($k, $v);
             }
         } else {
-            $this->data[$key] = $value;
+            $this->items[$key] = $value;
         }
 
         return $this;
     }
 
     /**
-     * Returns the data as an array.
+     * Returns the items as an array.
      * @return array
      */
     public function toArray()
     {
-        return $this->data;
+        $array = [];
+        foreach ($this->items as $key => $item) {
+            if (is_object($item) && method_exists($item, 'toArray')) {
+                $array[$key] = $item->toArray();
+            } else {
+                $array[$key] = $item;
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * Returns all of the items.
+     * @return array
+     */
+    public function getAll()
+    {
+        return $this->items;
     }
 
     /**
@@ -105,26 +123,26 @@ trait ArrayCollectionTrait
      */
     public function remove($key)
     {
-        unset($this->data[$key]);
+        unset($this->items[$key]);
     }
 
     /**
      * Merges an array, or any object that implements a toArray method,
      * into the current data set. The data being merged in wins on conflicts.
-     * @param  mixed $data
+     * @param  mixed $items
      * @return $this
      */
-    public function merge($data)
+    public function merge($items)
     {
-        if (is_object($data) && method_exists($data, 'toArray')) {
-            $data = $data->toArray();
-        }
-
-        if (! is_array($data)) {
+        if ($items instanceof CollectionInterface) {
+            $items = $items->getAll();
+        } elseif (is_object($items) && method_exists($items, 'toArray')) {
+            $items = $items->toArray();
+        } elseif (! is_array($items)) {
             throw new InvalidArgumentException('Cannot merge a value that is not an Array or an object implementing a toArray method.');
         }
 
-        $this->data = $data + $this->data;
+        $this->items = $items + $this->items;
 
         return $this;
     }
@@ -166,7 +184,7 @@ trait ArrayCollectionTrait
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->data);
+        return new ArrayIterator($this->items);
     }
 
     /**
@@ -175,7 +193,7 @@ trait ArrayCollectionTrait
      */
     public function count()
     {
-        return count($this->data);
+        return count($this->items);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Harbor\Collections\Tests;
 
-use Harbor\Collections\ArrayCollection;
+use Harbor\Collections\Collection;
 
 class DummyObject
 {
@@ -18,43 +18,48 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
 {
     protected function getPreLoadedContainer()
     {
-        $collection = new ArrayCollection();
-        $class = new \ReflectionClass($collection);
-        $dataProperty = $class->getProperty('data');
-        $dataProperty->setAccessible(true);
-        $dataProperty->setValue($collection, [
+        $collection = new Collection([
             'foo' => 'bar',
             'baz' => 'foo',
         ]);
 
         return $collection;
     }
+
     public function testImplementsInterfaces()
     {
-        $collection = new ArrayCollection();
+        $collection = new Collection();
 
-        $this->assertInstanceOf('Harbor\Collections\Collection', $collection);
+        $this->assertInstanceOf('Harbor\Collections\CollectionInterface', $collection);
         $this->assertInstanceOf('ArrayAccess', $collection);
         $this->assertInstanceOf('Countable', $collection);
         $this->assertInstanceOf('IteratorAggregate', $collection);
     }
 
+    public function testConstructor()
+    {
+        $items = ['foo' => 'bar'];
+        $collection = new Collection($items);
+
+        $this->assertAttributeEquals($items, 'items', $collection);
+    }
+
     public function testSetSingle()
     {
-        $collection = new ArrayCollection();
+        $collection = new Collection();
 
         $collection->set('foo', 'bar');
-        $this->assertAttributeEquals(['foo' => 'bar'], 'data', $collection);
+        $this->assertAttributeEquals(['foo' => 'bar'], 'items', $collection);
     }
 
     public function testSetArray()
     {
-        $data = ['foo' => 'bar', 'baz' => 'yay'];
+        $items = ['foo' => 'bar', 'baz' => 'yay'];
 
-        $collection = new ArrayCollection();
-        $collection->set($data);
+        $collection = new Collection();
+        $collection->set($items);
 
-        $this->assertAttributeEquals($data, 'data', $collection);
+        $this->assertAttributeEquals($items, 'items', $collection);
     }
 
     public function testHas()
@@ -78,7 +83,7 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
         $collection = $this->getPreLoadedContainer();
 
         $collection->remove('foo');
-        $this->assertAttributeEquals(['baz' => 'foo'], 'data', $collection);
+        $this->assertAttributeEquals(['baz' => 'foo'], 'items', $collection);
     }
 
     public function testMergeWithArray()
@@ -96,7 +101,7 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
             'new' => 'value',
         ];
 
-        $this->assertAttributeEquals($expected, 'data', $collection);
+        $this->assertAttributeEquals($expected, 'items', $collection);
     }
 
     public function testMergeWithObjectWithToArray()
@@ -110,7 +115,26 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
             'baz' => 'foo',
         ];
 
-        $this->assertAttributeEquals($expected, 'data', $collection);
+        $this->assertAttributeEquals($expected, 'items', $collection);
+    }
+
+    public function testMergeWithCollection()
+    {
+        $collection = new Collection([
+            'foo' => 'bar',
+        ]);
+
+        $collection2 = new Collection([
+            'foo' => 'baz',
+        ]);
+
+        $collection->merge($collection2);
+
+        $expected = [
+            'foo' => 'baz'
+        ];
+
+        $this->assertAttributeEquals($expected, 'items', $collection);
     }
 
     /**
@@ -126,8 +150,9 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
     public function testToArray()
     {
         $collection = $this->getPreLoadedContainer();
+        $collection->set('test', new DummyObject);
 
-        $this->assertEquals(['foo' => 'bar', 'baz' => 'foo'], $collection->toArray());
+        $this->assertEquals(['foo' => 'bar', 'baz' => 'foo', 'test' => ['foo' => 'overwrite']], $collection->toArray());
     }
 
     public function testJson()
@@ -146,7 +171,7 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testMagicGet()
     {
-        $mock = $this->getMock('Harbor\Collections\ArrayCollection', array('get'));
+        $mock = $this->getMock('Harbor\Collections\Collection', ['get']);
         $mock->expects($this->once())
              ->method('get')
              ->with($this->equalTo('foo'));
@@ -155,7 +180,7 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testMagicSet()
     {
-        $mock = $this->getMock('Harbor\Collections\ArrayCollection', array('set'));
+        $mock = $this->getMock('Harbor\Collections\Collection', ['set']);
         $mock->expects($this->once())
              ->method('set')
              ->with($this->equalTo('foo'),
@@ -180,7 +205,7 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testOffsetExists()
     {
-        $mock = $this->getMock('Harbor\Collections\ArrayCollection', array('has'));
+        $mock = $this->getMock('Harbor\Collections\Collection', ['has']);
         $mock->expects($this->once())
              ->method('has')
              ->with($this->equalTo('foo'));
@@ -190,7 +215,7 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testOffsetSet()
     {
-        $mock = $this->getMock('Harbor\Collections\ArrayCollection', array('set'));
+        $mock = $this->getMock('Harbor\Collections\Collection', ['set']);
         $mock->expects($this->once())
              ->method('set')
              ->with($this->equalTo('foo'),
@@ -201,7 +226,7 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testOffsetGet()
     {
-        $mock = $this->getMock('Harbor\Collections\ArrayCollection', array('get'));
+        $mock = $this->getMock('Harbor\Collections\Collection', ['get']);
         $mock->expects($this->once())
             ->method('get')
             ->with($this->equalTo('foo'));
@@ -211,7 +236,7 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testOffsetUnset()
     {
-        $mock = $this->getMock('Harbor\Collections\ArrayCollection', array('remove'));
+        $mock = $this->getMock('Harbor\Collections\Collection', ['remove']);
         $mock->expects($this->once())
             ->method('remove')
             ->with($this->equalTo('foo'));
