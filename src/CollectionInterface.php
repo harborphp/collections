@@ -3,7 +3,7 @@ namespace Harbor\Collections;
 
 
 /**
- * Trait ArrayCollectionTrait
+ * Interface CollectionInterface
  *  implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
  */
 interface CollectionInterface

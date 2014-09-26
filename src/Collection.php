@@ -7,6 +7,10 @@ use Countable;
 use IteratorAggregate;
 use JsonSerializable;
 
+/**
+ * Class Collection
+ * @package Harbor\Collections
+ */
 class Collection implements CollectionInterface, ArrayAccess, Countable, IteratorAggregate, JsonSerializable
 {
     use CollectionTrait;

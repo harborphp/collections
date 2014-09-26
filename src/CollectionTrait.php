@@ -7,7 +7,7 @@ use DomainException;
 use InvalidArgumentException;
 
 /**
- * Trait ArrayCollectionTrait
+ * Trait CollectionTrait
  *  implements CollectionInterface, ArrayAccess, Countable, IteratorAggregate, JsonSerializable
  */
 trait CollectionTrait
