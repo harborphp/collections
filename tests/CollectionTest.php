@@ -227,6 +227,14 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $mock->foo = 'HAHA';
     }
 
+    public function testMagicIsset()
+    {
+        $collection = $this->getPreLoadedContainer();
+
+        $this->assertFalse(empty($collection->foo));
+        $this->assertTrue(empty($collection->yummy));
+    }
+
     public function testGetIterator()
     {
         $collection = $this->getPreLoadedContainer();

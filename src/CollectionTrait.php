@@ -36,7 +36,7 @@ trait CollectionTrait
      */
     public function get($key, $default = null)
     {
-        return $this->has($key) ? $this->items[$key] : $default;
+        return isset($this->items[$key]) ? $this->items[$key] : $default;
     }
 
     /**
@@ -227,6 +227,16 @@ trait CollectionTrait
     public function __set($key, $value)
     {
         return $this->set($key, $value);
+    }
+
+    /**
+     * Magic method to empty() to work on the collection.
+     * @param  string $key The key to get.
+     * @return mixed
+     */
+    public function __isset($key)
+    {
+        return $this->has($key);
     }
 
     /**
