@@ -101,6 +101,17 @@ trait CollectionTrait
     }
 
     /**
+     * Reverse the Collection.
+     * @return $this
+     */
+    public function reverse()
+    {
+        $this->items = array_reverse($this->items);
+
+        return $this;
+    }
+
+    /**
      * Returns the items as an array.
      * @return array
      */
@@ -196,6 +207,20 @@ trait CollectionTrait
     public function isEmpty()
     {
         return count($this->items) === 0;
+    }
+
+    /**
+     * Map a callback to the items in the collection.
+     * @param  callable $callback
+     * @return $this
+     */
+    public function map(callable $callback)
+    {
+        foreach ($this->items as $key => $value) {
+            $this->items[$key] = call_user_func($callback, $value);
+        }
+
+        return $this;
     }
 
     /**
