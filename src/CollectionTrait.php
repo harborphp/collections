@@ -139,6 +139,22 @@ trait CollectionTrait
     }
 
     /**
+     * Call with() on all objects in the collection.
+     * @param  [type] $args [description]
+     * @return [type]       [description]
+     */
+    public function with(...$args)
+    {
+        foreach ($this->items as $item) {
+            if (is_object($item) && method_exists($item, 'with')) {
+                $item->with(...$args);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Returns the data as JSON.
      * @param int $options
      * @param int $depth
