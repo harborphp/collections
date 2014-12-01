@@ -140,8 +140,8 @@ trait CollectionTrait
 
     /**
      * Call with() on all objects in the collection.
-     * @param  [type] $args [description]
-     * @return [type]       [description]
+     * @param  $args
+     * @return $this
      */
     public function with(...$args)
     {
