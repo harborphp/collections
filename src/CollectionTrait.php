@@ -139,22 +139,6 @@ trait CollectionTrait
     }
 
     /**
-     * Call with() on all objects in the collection.
-     * @param  $args
-     * @return $this
-     */
-    public function with(...$args)
-    {
-        foreach ($this->items as $item) {
-            if (is_object($item) && method_exists($item, 'with')) {
-                $item->with(...$args);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Returns the data as JSON.
      * @param int $options
      * @param int $depth
@@ -247,6 +231,24 @@ trait CollectionTrait
     public function jsonSerialize()
     {
         return $this->toArray();
+    }
+
+
+    /**
+     * Call the given method on all items in the collection if the method exists.
+     * @param  $name
+     * @param  $args
+     * @return $this
+     */
+    public function __call($name, $args)
+    {
+        foreach ($this->items as $item) {
+            if (is_object($item) && method_exists($item, $name)) {
+                call_user_func([$item, $name], ...$args);
+            }
+        }
+
+        return $this;
     }
 
     /**
