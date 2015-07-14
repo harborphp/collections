@@ -12,6 +12,11 @@ class DummyObject
             'foo' => 'overwrite'
         ];
     }
+
+    public function foo()
+    {
+        // stub
+    }
 }
 
 class CollectionTest extends \PHPUnit_Framework_TestCase
@@ -124,6 +129,18 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals(['baz' => 'foo'], 'items', $collection);
     }
 
+    public function testReverse()
+    {
+        $items = ['foo', 'bar'];
+        $itemsReversed = ['bar', 'foo'];
+
+        $collection = new Collection($items);
+        
+        $collection->reverse();
+        
+        $this->assertAttributeEquals($itemsReversed, 'items', $collection);
+    }
+
     public function testMergeWithArray()
     {
         $collection = $this->getPreLoadedContainer();
@@ -191,6 +208,44 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $collection->set('test', new DummyObject);
 
         $this->assertEquals(['foo' => 'bar', 'baz' => 'foo', 'test' => ['foo' => 'overwrite']], $collection->toArray());
+    }
+
+    public function testMethodCallPassthru()
+    {
+        $mock = $this->getMock('Harbor\Collections\Tests\DummyObject', array('foo'));
+        $mock->expects($this->once())
+             ->method('foo');
+
+        $collection = new Collection([$mock]);
+        $collection->foo();
+    }
+
+    public function testIsEmpty()
+    {
+        $emptyCollection = new Collection([]);
+        $nonEmptyCollection = new Collection(['foo', 'bar']);
+        
+        $this->assertTrue($emptyCollection->isEmpty());
+        $this->assertFalse($nonEmptyCollection->isEmpty());
+    }
+
+    public function testMap()
+    {
+        $collection = new Collection([
+            'foo' => 'bar',
+            'bar' => 'baz',
+        ]);
+
+        $collection->map(function ($value) {
+            return $value.'test';
+        });
+
+        $expected = [
+            'foo' => 'bartest',
+            'bar' => 'baztest',
+        ];
+
+        $this->assertAttributeEquals($expected, 'items', $collection);
     }
 
     public function testJson()
